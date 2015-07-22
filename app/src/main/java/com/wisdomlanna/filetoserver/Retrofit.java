@@ -7,6 +7,7 @@ import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * Created by suraphol on 7/8/15 AD.
@@ -16,18 +17,19 @@ public class Retrofit {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLog(new AndroidLog("UpLoadFile"))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint("http://cm-smarthome.com/android")
+                .setEndpoint("http://feedback.clouddha.com/a/service")
                 .build();
         return restAdapter.create(FeedbackUpLoadFile.class);
     }
 
     public interface FeedbackUpLoadFile {
         @Multipart
-        @POST("/uploadImage")
-        void upLoad(@Part("filUpload") TypedFile path, Callback<UpLoadResult> callback);
+        @POST("/uploadimage")
+        void upLoad(@Part("f") TypedFile path, @Part("id") TypedString id, Callback<UpLoadResult> callback);
     }
 
-    public class UpLoadResult{
-        public String StatusID;
+    public class UpLoadResult {
+        public boolean success;
+        public String error;
     }
 }

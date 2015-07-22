@@ -24,6 +24,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 
 public class MainActivity extends Activity {
@@ -76,22 +77,28 @@ public class MainActivity extends Activity {
 
     private void upToServer(String imPath) {
         TypedFile typedFile = new TypedFile("image/jpeg", new File(imPath));
-        Retrofit.getUpLoadFile().upLoad(typedFile, new Callback<Retrofit.UpLoadResult>() {
+        TypedString typedString = new TypedString("1");
+        Retrofit.getUpLoadFile().upLoad(typedFile, typedString, new Callback<Retrofit.UpLoadResult>() {
             @Override
             public void success(Retrofit.UpLoadResult upLoadResult, Response response) {
-                Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show();
+                if (upLoadResult.success) {
+                    Toast.makeText(context, "OK...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "NO...", Toast.LENGTH_SHORT).show();
+
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(context, "Error "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public String getRealPathFromURI (Uri contentUri) {
+    public String getRealPathFromURI(Uri contentUri) {
         String path = null;
-        String[] proj = { MediaStore.MediaColumns.DATA };
+        String[] proj = {MediaStore.MediaColumns.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         if (cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
